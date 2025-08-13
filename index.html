@@ -8,9 +8,25 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
+      #soundBtn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 999;
+        padding: 10px 15px;
+        font-size: 16px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        display: none;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
+    <button id="soundBtn">🔊 Увімкнути звук</button>
+
     <a-scene mindar-image="imageTargetSrc: ./assets/target.mind;" 
              color-space="sRGB" 
              renderer="colorManagement: true, physicallyCorrectLights" 
@@ -18,7 +34,7 @@
              device-orientation-permission-ui="enabled: false">
              
       <a-assets>
-        <video id="video" src="./assets/video.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video>
+        <video id="video" src="./assets/video.mp4" autoplay loop playsinline crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -28,21 +44,29 @@
       </a-entity>
     </a-scene>
 
-    <!-- 🎯 JavaScript для керування відео -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const video = document.querySelector("#video");
         const videoPlane = document.querySelector("a-video");
         const target = document.querySelector("[mindar-image-target]");
+        const soundBtn = document.querySelector("#soundBtn");
 
         target.addEventListener("targetFound", () => {
           video.play();
           videoPlane.setAttribute("visible", "true");
+          soundBtn.style.display = "block";
         });
 
         target.addEventListener("targetLost", () => {
           video.pause();
           videoPlane.setAttribute("visible", "false");
+          soundBtn.style.display = "none";
+        });
+
+        soundBtn.addEventListener("click", () => {
+          video.muted = false;
+          video.volume = 1.0;
+          video.play();
         });
       });
     </script>
