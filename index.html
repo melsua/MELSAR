@@ -18,17 +18,33 @@
              device-orientation-permission-ui="enabled: false">
              
       <a-assets>
-        <video id="video" src="./assets/video.mp4" autoplay loop muted playsinline></video>
+        <video id="video" src="./assets/video.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="#video" width="1" height="0.6" position="0 0 0.1"></a-video>
+        <a-video src="#video" width="1" height="0.6" position="0 0 0.1" visible="false"></a-video>
       </a-entity>
     </a-scene>
+
+    <!-- 🎯 JavaScript для керування відео -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const video = document.querySelector("#video");
+        const videoPlane = document.querySelector("a-video");
+        const target = document.querySelector("[mindar-image-target]");
+
+        target.addEventListener("targetFound", () => {
+          video.play();
+          videoPlane.setAttribute("visible", "true");
+        });
+
+        target.addEventListener("targetLost", () => {
+          video.pause();
+          videoPlane.setAttribute("visible", "false");
+        });
+      });
+    </script>
   </body>
 </html>
-
-
-
